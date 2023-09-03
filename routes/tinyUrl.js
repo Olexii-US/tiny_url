@@ -1,21 +1,13 @@
 const express = require("express");
 
 const { asyncWrapper } = require("../helpers/asyncWrapper");
-const { postUrl } = require("../controllers/tinyUrlControllers");
-// const {
-//   postContactValidation,
-//   putContactValidation,
-//   favoriteContactValidation,
-//   queryContactValidation,
-// } = require("../../middleware/validationMdlw");
+const { postUrl, getTinyUrl } = require("../controllers/tinyUrlControllers");
+const { postUrlValidation } = require("../middleware/validationMdw");
 
 const urlRouter = express.Router();
 
-urlRouter.post(
-  "/create-tiny-url",
-  //   postContactValidation,
-  asyncWrapper(postUrl)
-);
-// router.get("/", queryContactValidation, asyncWrapper(getContacts));
+urlRouter.post("/create-tiny-url", postUrlValidation, asyncWrapper(postUrl));
+
+urlRouter.get("/:tinyUrl", asyncWrapper(getTinyUrl));
 
 module.exports = urlRouter;

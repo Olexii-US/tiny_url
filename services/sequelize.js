@@ -21,27 +21,31 @@ async function bdTest() {
 }
 bdTest();
 
-sequelize.define("urlModel", {
-  columnA: {
-    type: Sequelize.INTEGER,
-    // validate: {
-    //   is: ["[a-z]", "i"], // will only allow letters
-    //   max: 23, // only allow values <= 23
-    //   isIn: {
-    //     args: [["en", "zh"]],
-    //     msg: "Must be English or Chinese",
-    //   },
-    // },
-    field: "id",
+const UrlModel = sequelize.define(
+  "urls",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    long_url: {
+      type: Sequelize.STRING,
+      validate: {
+        isUrl: true,
+      },
+    },
+    short_url: {
+      type: Sequelize.STRING(75),
+      // validate: {
+      //   isUrl: true,
+      // },
+    },
   },
-  columnB: {
-    type: Sequelize.STRING,
-    field: "long_url",
-  },
-  columnC: {
-    type: Sequelize.STRING(75),
-    field: "short_url",
-  },
-});
 
-console.log("sequelize.models.urlModel", sequelize.models.urlModel);
+  {
+    timestamps: false,
+  }
+);
+
+module.exports = UrlModel;
