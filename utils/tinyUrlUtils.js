@@ -1,3 +1,4 @@
+const redis = require("../services/redis");
 const UrlModel = require("../services/sequelize");
 
 const hashedUrl = Math.random()
@@ -5,13 +6,9 @@ const hashedUrl = Math.random()
   .replace(/[^a-z0-9]/, "")
   .substring(2, 10);
 
-console.log("------hashedUrl------", hashedUrl);
-
 const createTinyUrl = async (url) => {
   try {
-    // const tinyUrl = process.env.DEV_URL + "/" + hashedUrl;
     const tinyUrl = hashedUrl;
-    console.log("------tinyUrl------", tinyUrl);
     const newTinyUrl = await UrlModel.create(
       {
         long_url: url,
@@ -19,6 +16,7 @@ const createTinyUrl = async (url) => {
       },
       { fields: ["long_url", "short_url"] }
     );
+
     return newTinyUrl;
   } catch (error) {
     console.log(error);
@@ -27,10 +25,18 @@ const createTinyUrl = async (url) => {
 
 const findTinyUrl = async (tinyUrl) => {
   try {
-    const fullUrl = await UrlModel.findOne({
-      where: { short_url: tinyUrl },
-    });
-    return fullUrl;
+    const redisUrl = await redis.get(tinyUrl);
+
+    if (!redisUrl) {
+      const fullUrl = await UrlModel.findOne({
+        where: { short_url: tinyUrl },
+      });
+
+      const longUrl = !fullUrl ? fullUrl : fullUrl.long_url;
+
+      return longUrl;
+    }
+    return redisUrl;
   } catch (error) {
     console.log(error);
   }
