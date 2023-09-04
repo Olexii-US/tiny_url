@@ -1,0 +1,30 @@
+version: "3"
+services:
+  myapp:
+    container_name: tiny-sql
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    links:
+      - redis
+      - mariadb
+  mariadb:
+    env_file: ./.env
+    image: mariadb:latest
+    container_name: tiny-url-db
+    restart: always
+    environment:
+      MARIADB_USER: "${MARIA_DB_USER}"
+      MARIADB_PASSWORD: "${MARIA_DB_PASS}"
+      MARIADB_ROOT_PASSWORD: "${MARIA_DB_PASS}"
+      MYSQL_DATABASE: "${MARIA_DB_DATABASE}"
+    ports:
+      - "3306:3306"
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG

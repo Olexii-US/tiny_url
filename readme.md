@@ -1,14 +1,24 @@
-### Запуск проекту:
+### To start project:
 
 # 1
 
-- запустити redis-server
-- запустити redis-cli
+- start: 'redis-server'
+- start: 'redis-cli'
 
-# 2 Команди
+# 2 Commands
 
-- `npm start` старт сервера в режимі production
-- `npm run start:dev` старт сервера в режимі розробки (development)
-- `npm tun test` запускає jest тести
-- `npm run lint` запустити виконання перевірки коду з eslint
-- `npm lint:fix` перевірка лінтера з автоматичними виправленнями простих помилок
+- `npm start` production server start
+- `npm run start:dev` development server start
+- `npm tun test` start jest tests
+- `npm run lint` start eslint project code test
+- `npm lint:fix` start eslint project code test with easy error fix
+
+# 3 Requests
+
+- Creating tiny URL
+  POST request on http://localhost:3000/api/create-tiny-url
+  with JSON body {"url": "https:...."}
+
+- Getting back tiny URL
+  GET request on http://localhost:3000/api/:tinyUrl
+  with req.params "......"
